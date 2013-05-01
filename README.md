@@ -8,7 +8,7 @@ In a suitable directory
 
 * Replicate this repository - `git clone git@github.com:brightbox/bootstaller.git`
 * Replicate the ipxe repository alongside - `git clone git://git.ipxe.org/ipxe.git`
-* Change into the bootstaller directory - `cd bootstaller'
+* Change into the bootstaller directory - `cd bootstaller`
 * Run `rake`
 
 This creates two bootable images `bootstaller-x86_64.usb` and `bootstaller-i686.usb`
