@@ -26,29 +26,31 @@ item --menu sl_ks main Return
 # Standard CentOS Installation Menu
 menu --name centos Standard CentOS Installations
 item --menu centos --gap Select CentOS Version to Install
-item --menu centos --default centos6 CentOS v6
+item --menu centos --default centos7 CentOS v7
+item --menu centos centos6 CentOS v6
 item --menu centos centos5 CentOS v5
 item --menu centos main Return
 
 # Kickstart CentOS Installation Menu
 menu --name centos_ks Kickstart CentOS Installation from Userdata
 item --menu centos_ks --gap Select CentOS Version to Kickstart
-item --menu centos_ks --default centos6_ks CentOS v6
+item --menu centos_ks --default centos7_ks CentOS v6
+item --menu centos_ks centos6_ks CentOS v6
 item --menu centos_ks centos5_ks CentOS v5
 item --menu centos_ks main Return
 
 # Standard Fedora Installation Menu
 menu --name fedora Standard Fedora Installations
 item --menu fedora --gap Select Fedora Version to Install
-item --menu fedora --default f18 Fedora 18
-item --menu fedora f17 Fedora 17 
+item --menu fedora --default f20 Fedora 20
+item --menu fedora f19 Fedora 19
 item --menu fedora main Return
 
 # Kickstart Fedora Installation Menu
 menu --name fedora_ks Kickstart Fedora Installation from Userdata
 item --menu fedora_ks --gap Select Fedora Version to Kickstart
-item --menu fedora_ks --default f18_ks Fedora 18
-item --menu fedora_ks f17_ks Fedora 17 
+item --menu fedora_ks --default f20_ks Fedora 20
+item --menu fedora_ks f19_ks Fedora 19
 item --menu fedora_ks main Return
 
 # Standard Debian Installation Menu
@@ -88,19 +90,26 @@ choose --menu main --keep distro
 choose --menu ${distro} --keep target
 goto ${target}
 
-:f18_ks
+:f20_ks
 set kickstart ks=${userdata}
 
-:f18
-set version 18
+:f20
+set version 20
 goto fedora_boot
 
-:f17_ks
+:f19_ks
 set kickstart ks=${userdata}
 
-:f17
-set version 17
+:f19
+set version 19
 goto fedora_boot
+
+:centos7_ks
+set kickstart ks=${userdata}
+:centos7
+set version 7
+set bo repo
+goto centos_boot
 
 :centos6_ks
 set kickstart ks=${userdata}
