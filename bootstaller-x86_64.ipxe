@@ -34,7 +34,7 @@ item --menu centos main Return
 # Kickstart CentOS Installation Menu
 menu --name centos_ks Kickstart CentOS Installation from Userdata
 item --menu centos_ks --gap Select CentOS Version to Kickstart
-item --menu centos_ks --default centos7_ks CentOS v6
+item --menu centos_ks --default centos7_ks CentOS v7
 item --menu centos_ks centos6_ks CentOS v6
 item --menu centos_ks centos5_ks CentOS v5
 item --menu centos_ks main Return
@@ -86,7 +86,7 @@ item --menu main sl_ks Scientific Linux Kickstart
 
 # Start
 :main
-choose --menu main --keep distro 
+choose --menu main --keep distro || shell
 choose --menu ${distro} --keep target
 goto ${target}
 
