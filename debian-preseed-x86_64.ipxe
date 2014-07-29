@@ -1,0 +1,14 @@
+#!ipxe
+
+set darch amd64
+set userdata http://169.254.169.254/latest/user-data
+set debian_root http://mirror.bytemark.co.uk/debian/dists
+dhcp
+
+:stable_ps
+set version stable
+goto debian_preseed_boot
+
+:debian_preseed_boot
+initrd ${debian_root}/${version}/main/installer-${darch}/current/images/netboot/debian-installer/${darch}/initrd.gz
+boot ${debian_root}/${version}/main/installer-${darch}/current/images/netboot/debian-installer/${darch}/linux auto=true hostname=localhost domain= url=${userdata} text

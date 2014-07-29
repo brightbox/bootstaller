@@ -1,0 +1,17 @@
+#!ipxe
+
+set farch x86_64
+set userdata http://169.254.169.254/latest/user-data
+set centos_root http://mirror.bytemark.co.uk/centos
+dhcp
+
+:centos7_ks
+set kickstart ks=${userdata}
+:centos7
+set version 7
+set bo repo
+
+:centos_boot
+initrd ${centos_root}/${version}/os/${farch}/images/pxeboot/initrd.img
+boot ${centos_root}/${version}/os/${farch}/images/pxeboot/vmlinuz ${bo}=${centos_root}/${version}/os/${farch}/ ${kickstart}
+

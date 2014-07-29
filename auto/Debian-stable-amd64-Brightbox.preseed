@@ -1,0 +1,79 @@
+d-i debian-installer/locale string en_GB
+d-i debian-installer/keymap select uk
+d-i keyboard-configuration/xkb-keymap select uk
+d-i keymap select uk
+#d-i debian-installer/country string GB
+#d-i debian-installer/language string en_GB:en
+d-i console-setup/ask_detect boolean false
+d-i console-setup/layoutcode string uk
+
+d-i netcfg/choose_interface select auto
+d-i netcfg/get_hostname string localhost
+d-i netcfg/get_domain string localdomain
+d-i netcfg/use_autoconfig boolean true
+d-i netcfg/wireless_wep string
+
+d-i mirror/protocol string http
+d-i mirror/country string UK
+d-i mirror/http/hostname string mirror.bytemark.co.uk
+d-i mirror/http/directory string /debian/
+d-i mirror/http/proxy string
+
+d-i clock-setup/utc boolean true
+d-i time/zone select Etc/UTC
+d-i clock-setup/ntp boolean false
+
+d-i partman-auto/method string regular
+d-i partman-auto/expert_recipe string \
+	500 10000 1000000 ext4 \
+		$primary{ } \
+		$bootable{ } \
+		method{ format } \
+		format{ } \
+		use_filesystem{ } \
+		filesystem{ ext4 } \
+		mountpoint{ / } .
+d-i partman-partitioning/confirm_write_new_label boolean true
+d-i partman/choose_partition select finish
+d-i partman/confirm boolean true
+d-i partman/confirm_nooverwrite boolean true
+d-i partman-basicfilesystems/no_swap boolean false
+
+d-i passwd/root-login boolean true
+d-i passwd/make-user boolean false
+#d-i passwd/root-password-crypted password **LOCKED**
+d-i passwd/root-password password sillyrootpassword
+d-i passwd/root-password-again password sillyrootpassword
+
+#Need backports for wheezy.
+d-i apt-setup/local0/repository string \
+        http://mirror.bytemark.co.uk/debian wheezy-backports main
+d-i apt-setup/local0/source boolean false
+
+#Select minimal install, and install the cloud tools
+tasksel tasksel/first multiselect minimal
+d-i pkgsel/include string openssh-server \
+	sudo \
+	cloud-init/backports \
+	cloud-initramfs-growroot
+
+# No need for extra upgrade step. Full network install.
+d-i pkgsel/upgrade select none
+
+#Install bootloader in boot partition
+d-i grub-installer/only_debian boolean true
+d-i grub-installer/with_other_os boolean true
+
+#Power off after finishing.
+d-i debian-installer/exit/poweroff boolean true
+d-i finish-install/reboot_in_progress note
+
+#No thanks
+popularity-contest popularity-contest/participate boolean false
+
+#Select Datasource in cloud-init
+cloud-init	cloud-init/datasources	multiselect	NoCloud, ConfigDrive, Ec2, None
+
+#Add sudo to initial user create
+d-i preseed/late_command string \
+  printf "system_info:\n  default_user:\n    sudo: ['ALL=(ALL) NOPASSWD:ALL']\n    shell: /bin/bash" >/target/etc/cloud/cloud.cfg.d/90_sudo.cfg
