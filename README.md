@@ -1,6 +1,6 @@
 # Brightbox Bootstaller
 
-This is a [iPXE](http://ipxe.org/) menu script that allows you to netboot and autobuild servces on [Brightbox](http://brightbox.com/) Cloud.
+This is a [iPXE](http://ipxe.org/) menu script that allows you to netboot and autobuild services on [Brightbox](http://brightbox.com/) Cloud.
 
 ## To Build
 
