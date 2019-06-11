@@ -6,29 +6,13 @@ set userdata http://169.254.169.254/latest/user-data
 set fedora_root http://mirror.bytemark.co.uk/fedora/linux/releases
 set debian_root http://mirror.bytemark.co.uk/debian/dists
 set centos_root http://mirror.bytemark.co.uk/centos
-set sl_root http://www.mirrorservice.org/sites/ftp.scientificlinux.org/linux/scientific
 dhcp
-
-# Standard Scientific Linux Installation Menu
-menu --name sl Standard Scientific Linux Installations
-item --menu sl --gap Select Scientific Linux Version to Install
-item --menu sl --default sl6 Scientific Linux v6
-item --menu sl sl5 Scientific Linux v5
-item --menu sl main Return
-
-# Kickstart Scientific Linux Installation Menu
-menu --name sl_ks Kickstart Scientific Linux Installation from Userdata
-item --menu sl_ks --gap Select Scientific Linux Version to Kickstart
-item --menu sl_ks --default sl6_ks Scientific Linux v6
-item --menu sl_ks sl5_ks Scientific Linux v5
-item --menu sl_ks main Return
 
 # Standard CentOS Installation Menu
 menu --name centos Standard CentOS Installations
 item --menu centos --gap Select CentOS Version to Install
 item --menu centos --default centos7 CentOS v7
 item --menu centos centos6 CentOS v6
-item --menu centos centos5 CentOS v5
 item --menu centos main Return
 
 # Kickstart CentOS Installation Menu
@@ -36,53 +20,50 @@ menu --name centos_ks Kickstart CentOS Installation from Userdata
 item --menu centos_ks --gap Select CentOS Version to Kickstart
 item --menu centos_ks --default centos7_ks CentOS v7
 item --menu centos_ks centos6_ks CentOS v6
-item --menu centos_ks centos5_ks CentOS v5
 item --menu centos_ks main Return
 
 # Standard Fedora Installation Menu
 menu --name fedora Standard Fedora Installations
 item --menu fedora --gap Select Fedora Version to Install
-item --menu fedora --default f20 Fedora 20
-item --menu fedora f19 Fedora 19
+item --menu fedora --default f30 Fedora 30
+item --menu fedora f29 Fedora 29
 item --menu fedora main Return
 
 # Kickstart Fedora Installation Menu
 menu --name fedora_ks Kickstart Fedora Installation from Userdata
 item --menu fedora_ks --gap Select Fedora Version to Kickstart
-item --menu fedora_ks --default f20_ks Fedora 20
-item --menu fedora_ks f19_ks Fedora 19
+item --menu fedora_ks --default f30_ks Fedora 30
+item --menu fedora_ks f29_ks Fedora 29
 item --menu fedora_ks main Return
 
 # Standard Debian Installation Menu
-menu --name debian Standard Debian Installations
-item --menu debian --gap Select Debian Version to Install
-item --menu debian stable Debian Stable 
-item --menu debian testing Debian Testing 
-item --menu debian unstable Debian Unstable (sid)
-item --menu debian main Return
+#menu --name debian Standard Debian Installations
+#item --menu debian --gap Select Debian Version to Install
+#item --menu debian stable Debian Stable 
+#item --menu debian testing Debian Testing 
+#item --menu debian unstable Debian Unstable (sid)
+#item --menu debian main Return
 
 # Preseed Debian Installation Menu
-menu --name debian_preseed Preseed Debian Installation from Userdata
-item --menu debian_preseed --gap Select Debian Version to Preseed Install
-item --menu debian_preseed stable_ps Debian Stable 
-item --menu debian_preseed testing_ps Debian Testing 
-item --menu debian_preseed unstable_ps Debian Unstable (sid)
-item --menu debian_preseed main Return
+#menu --name debian_preseed Preseed Debian Installation from Userdata
+#item --menu debian_preseed --gap Select Debian Version to Preseed Install
+#item --menu debian_preseed stable_ps Debian Stable 
+#item --menu debian_preseed testing_ps Debian Testing 
+#item --menu debian_preseed unstable_ps Debian Unstable (sid)
+#item --menu debian_preseed main Return
 
 # Main Menu
 menu --name main Brightbox Cloud Bootstaller
 item --menu main
 item --menu main --gap Standard Installations
 item --menu main centos CentOS
-item --menu main debian Debian
+#item --menu main debian Debian
 item --menu main fedora Fedora
-item --menu main sl Scientific Linux
 item --menu main
 item --menu main --gap Automatic Installations 
 item --menu main centos_ks CentOS Kickstart
-item --menu main debian_preseed Debian Preseed
+#item --menu main debian_preseed Debian Preseed
 item --menu main fedora_ks Fedora Kickstart
-item --menu main sl_ks Scientific Linux Kickstart
 
 # Start
 :main
@@ -90,18 +71,18 @@ choose --menu main --keep distro || shell
 choose --menu ${distro} --keep target
 goto ${target}
 
-:f20_ks
+:f30_ks
 set kickstart ks=${userdata}
 
-:f20
-set version 20
+:f30
+set version 30
 goto fedora_boot
 
-:f19_ks
+:f29_ks
 set kickstart ks=${userdata}
 
-:f19
-set version 19
+:f29
+set version 29
 goto fedora_boot
 
 :centos7_ks
@@ -124,21 +105,6 @@ set kickstart ks=${userdata}
 set version 5
 set bo method
 goto centos_boot
-
-:sl6_ks
-set kickstart ks=${userdata}
-:sl6
-set version 6x
-set bo repo
-set subdir os/
-goto sl_boot
-
-:sl5_ks
-set kickstart ks=${userdata}
-:sl5
-set version 5x
-set bo method
-goto sl_boot
 
 :stable
 set version stable
@@ -165,16 +131,12 @@ set version unstable
 goto debian_preseed_boot
 
 :fedora_boot
-initrd ${fedora_root}/${version}/Fedora/${farch}/os/images/pxeboot/initrd.img
-boot ${fedora_root}/${version}/Fedora/${farch}/os/images/pxeboot/vmlinuz repo=${fedora_root}/${version}/Fedora/${farch}/os/ ${kickstart}
+initrd ${fedora_root}/${version}/Server/${farch}/os/images/pxeboot/initrd.img
+boot ${fedora_root}/${version}/Server/${farch}/os/images/pxeboot/vmlinuz repo=${fedora_root}/${version}/Server/${farch}/os/ ${kickstart}
 
 :centos_boot
 initrd ${centos_root}/${version}/os/${farch}/images/pxeboot/initrd.img
 boot ${centos_root}/${version}/os/${farch}/images/pxeboot/vmlinuz ${bo}=${centos_root}/${version}/os/${farch}/ ${kickstart}
-
-:sl_boot
-initrd ${sl_root}/${version}/${farch}/${subdir}images/pxeboot/initrd.img
-boot ${sl_root}/${version}/${farch}/${subdir}images/pxeboot/vmlinuz ${bo}=${sl_root}/${version}/${farch}/${subdir} ${kickstart}
 
 :debian_boot
 set 209:string pxelinux.cfg/default
