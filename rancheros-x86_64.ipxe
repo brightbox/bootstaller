@@ -5,6 +5,6 @@ dhcp
 # Location of Kernel/Initrd images
 set base-url http://releases.rancher.com/os/latest
 
-kernel ${base-url}/vmlinuz rancher.state.autoformat=[/dev/sda,/dev/vda] rancher.cloud_init.datasources=[ec2]
+kernel ${base-url}/vmlinuz rancher.state.dev=LABEL=RANCHER_STATE rancher.state.autoformat=[/dev/vda] rancher.state.wait rancher.cloud_init.datasources=[ec2]
 initrd ${base-url}/initrd
 boot

@@ -11,29 +11,31 @@ dhcp
 # Standard CentOS Installation Menu
 menu --name centos Standard CentOS Installations
 item --menu centos --gap Select CentOS Version to Install
-item --menu centos --default centos7 CentOS v7
+item --menu centos --default centos8 CentOS v8
+item --menu centos centos7 CentOS v7
 item --menu centos centos6 CentOS v6
 item --menu centos main Return
 
 # Kickstart CentOS Installation Menu
 menu --name centos_ks Kickstart CentOS Installation from Userdata
 item --menu centos_ks --gap Select CentOS Version to Kickstart
-item --menu centos_ks --default centos7_ks CentOS v7
+item --menu centos_ks --default centos8_ks CentOS v8
+item --menu centos_ks centos7_ks CentOS v7
 item --menu centos_ks centos6_ks CentOS v6
 item --menu centos_ks main Return
 
 # Standard Fedora Installation Menu
 menu --name fedora Standard Fedora Installations
 item --menu fedora --gap Select Fedora Version to Install
-item --menu fedora --default f30 Fedora 30
-item --menu fedora f29 Fedora 29
+item --menu fedora --default f32 Fedora 32
+item --menu fedora f31 Fedora 31
 item --menu fedora main Return
 
 # Kickstart Fedora Installation Menu
 menu --name fedora_ks Kickstart Fedora Installation from Userdata
 item --menu fedora_ks --gap Select Fedora Version to Kickstart
-item --menu fedora_ks --default f30_ks Fedora 30
-item --menu fedora_ks f29_ks Fedora 29
+item --menu fedora_ks --default f32_ks Fedora 32
+item --menu fedora_ks f31_ks Fedora 31
 item --menu fedora_ks main Return
 
 # Standard Debian Installation Menu
@@ -71,19 +73,25 @@ choose --menu main --keep distro || shell
 choose --menu ${distro} --keep target
 goto ${target}
 
-:f30_ks
-set kickstart ks=${userdata}
+:f32_ks
+set kickstart inst.ks=${userdata}
 
-:f30
-set version 30
+:f32
+set version 32
 goto fedora_boot
 
-:f29_ks
-set kickstart ks=${userdata}
+:f31_ks
+set kickstart inst.ks=${userdata}
 
-:f29
-set version 29
+:f31
+set version 31
 goto fedora_boot
+
+:centos8_ks
+set kickstart inst.ks=${userdata}
+:centos8
+set version 8
+goto centos8_boot
 
 :centos7_ks
 set kickstart ks=${userdata}
@@ -132,11 +140,15 @@ goto debian_preseed_boot
 
 :fedora_boot
 initrd ${fedora_root}/${version}/Server/${farch}/os/images/pxeboot/initrd.img
-boot ${fedora_root}/${version}/Server/${farch}/os/images/pxeboot/vmlinuz repo=${fedora_root}/${version}/Server/${farch}/os/ ${kickstart}
+boot ${fedora_root}/${version}/Server/${farch}/os/images/pxeboot/vmlinuz ip=dhcp inst.repo=${fedora_root}/${version}/Server/${farch}/os/ ${kickstart}
 
 :centos_boot
 initrd ${centos_root}/${version}/os/${farch}/images/pxeboot/initrd.img
 boot ${centos_root}/${version}/os/${farch}/images/pxeboot/vmlinuz ${bo}=${centos_root}/${version}/os/${farch}/ ${kickstart}
+
+:centos8_boot
+initrd ${centos_root}/${version}/BaseOS/${farch}/os/images/pxeboot/initrd.img
+boot ${centos_root}/${version}/BaseOS/${farch}/os/images/pxeboot/vmlinuz ip=dhcp inst.repo=${centos_root}/${version}/BaseOS/${farch}/os/ ${kickstart}
 
 :debian_boot
 set 209:string pxelinux.cfg/default
